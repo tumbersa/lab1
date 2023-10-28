@@ -1,7 +1,7 @@
 package org.example;
 
 import java.util.Arrays;
-public class Container<T> {
+class Container<T> {
     /**
      @param INIT_SIZE размер изначального массива
      */
@@ -16,23 +16,23 @@ public class Container<T> {
      */
     private Object[] array = new Object[INIT_SIZE];
     /**
-     @param pointer - испольняет роль инедкса последнего элемента
+     @param lastIndex - инедкс последнего элемента
      */
-    private int pointer = 0;
+    private int lastIndex = 0;
 
     /**
-     Добавляет новый элемент в список. При достижении размера внутреннего
+     Добавляется новый элемент в список. При достижении размера внутреннего
      массива происходит его увеличение в два раза.
      @param item - объект типа T который необходимо добавить в контейнер
      */
     public void add(T item) {
-        if(pointer == array.length-1)
-            resize(array.length*2); // увеличу в 2 раза, если достигли границ
-        array[pointer++] = item;
+        if(lastIndex == array.length-1)
+            resize(array.length*2); // увеличивается в 2 раза, если достигается граница
+        array[lastIndex++] = item;
     }
 
     /**
-     Возвращает элемент списка по индексу.
+     Возвращается элемент списка по индексу.
      @param index - индекс элемента который надо вернуть
      */
     public T get(int index) {
@@ -48,11 +48,11 @@ public class Container<T> {
      @param index - индекс элемента который надо удалить
      */
     public void removeIndex(int index) {
-        for (int i = index; i<pointer; i++)
+        for (int i = index; i<lastIndex; i++)
             array[i] = array[i+1];
-        array[pointer] = null;
-        pointer--;
-        if (array.length > INIT_SIZE && pointer < array.length / CUT_RATE)
+        array[lastIndex] = null;
+        lastIndex--;
+        if (array.length > INIT_SIZE && lastIndex < array.length / CUT_RATE)
             resize(array.length/2); // если элементов в CUT_RATE раз меньше чем
         // длина массива, то уменьшу в два раза
     }
@@ -61,18 +61,18 @@ public class Container<T> {
      @param deleteValue - значение которое надо удалить из контейнера
      */
     public void removeValue(T deleteValue){
-        int index=pointer;
-        for (int i=0;i<pointer;i++ ) {
+        int index=lastIndex;
+        for (int i=0;i<lastIndex;i++ ) {
             if (array[i] == deleteValue) {
                 index=i;
                 break;
             }
         }
-        for (int i=index;i<pointer;i++)
+        for (int i=index;i<lastIndex;i++)
             array[i] = array[i+1];
-        array[pointer] = null;
-        pointer--;
-        if (array.length > INIT_SIZE && pointer < array.length / CUT_RATE)
+        array[lastIndex] = null;
+        lastIndex--;
+        if (array.length > INIT_SIZE && lastIndex < array.length / CUT_RATE)
             resize(array.length/2);
     }
 
@@ -82,8 +82,8 @@ public class Container<T> {
      */
     @Override
     public String toString() {
-        Object[] arrayToOut = new Object[pointer];
-        System.arraycopy(array, 0, arrayToOut, 0, pointer);
+        Object[] arrayToOut = new Object[lastIndex];
+        System.arraycopy(array, 0, arrayToOut, 0, lastIndex);
         return Arrays.toString(arrayToOut);
     }
 
@@ -91,7 +91,7 @@ public class Container<T> {
      * Возвращает количество элементов в списке
      */
     public int size() {
-        return pointer;
+        return lastIndex;
     }
 
     /**
@@ -100,7 +100,7 @@ public class Container<T> {
      * */
     private void resize(int newLength) {
         Object[] newArray = new Object[newLength];
-        System.arraycopy(array, 0, newArray, 0, pointer);
+        System.arraycopy(array, 0, newArray, 0, lastIndex);
         array = newArray;
     }
 }
