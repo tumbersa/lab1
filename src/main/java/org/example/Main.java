@@ -10,11 +10,15 @@ public class Main {
         test.add("n");
         test.add("'");
         System.out.println(test);
+        test.removeValue("e");
+        test.removeIndex(3);
+        System.out.println(test);
+        System.out.println(test.size());
+        System.out.println(test.get(0));
         Container<Integer> test2 = new Container<>();
         test2.add(11);
         test2.add(11);
         test2.add(322);
-        test2.add(25);
         System.out.println(test2);
     }
 }

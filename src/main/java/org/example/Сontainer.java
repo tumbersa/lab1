@@ -5,12 +5,7 @@ class Container<T> {
     /**
      @param INIT_SIZE размер изначального массива
      */
-    private final int INIT_SIZE = 16;
-    /**
-     @param CUT_RATE число для проверки необходимого размера , т.е если массив будет размером 64 , а объектов в нем всего 15 ,
-     то массив уменьшиться в 4 раза , ради экономии памяти
-     */
-    private final int CUT_RATE = 4;
+    private final int INIT_SIZE = 1;
     /**
      Массив array  на базе которого построен контейнер
      */
@@ -21,14 +16,13 @@ class Container<T> {
     private int lastIndex = 0;
 
     /**
-     Добавляется новый элемент в список. При достижении размера внутреннего
-     массива происходит его увеличение в два раза.
-     @param item - объект типа T который необходимо добавить в контейнер
+     Добавляется новый элемент в список.
+     @param element - объект типа T который необходимо добавить в контейнер
      */
-    public void add(T item) {
+    public void add(T element) {
         if(lastIndex == array.length-1)
-            resize(array.length*2); // увеличивается в 2 раза, если достигается граница
-        array[lastIndex++] = item;
+            resize(array.length + 1);
+        array[lastIndex++] = element;
     }
 
     /**
@@ -41,23 +35,23 @@ class Container<T> {
 
     /**
      Удаляет элемент списка по индексу. Все элементы справа от удаляемого
-     перемещаются на шаг налево. Если после удаления элемента количество
-     элементов стало в CUT_RATE раз меньше чем размер внутреннего массива,
-     то внутренний массив уменьшается в два раза, для экономии занимаемого
-     места.
+     смещаются один раз в начало.
      @param index - индекс элемента который надо удалить
      */
     public void removeIndex(int index) {
-        for (int i = index; i<lastIndex; i++)
-            array[i] = array[i+1];
-        array[lastIndex] = null;
-        lastIndex--;
-        if (array.length > INIT_SIZE && lastIndex < array.length / CUT_RATE)
-            resize(array.length/2); // если элементов в CUT_RATE раз меньше чем
-        // длина массива, то уменьшу в два раза
+        if (index >= lastIndex) {
+            return;
+        } else {
+            for (int i = index; i < lastIndex; i++)
+                array[i] = array[i + 1];
+            array[lastIndex] = null;
+            lastIndex--;
+            resize(array.length - 1);
+        }
     }
     /**
-     Удаляет элемент равный полученному значению
+     Удаляет элемент равный полученному значению. Все элементы справа от удаляемого
+     смещаются один раз в начало.
      @param deleteValue - значение которое надо удалить из контейнера
      */
     public void removeValue(T deleteValue){
@@ -68,12 +62,13 @@ class Container<T> {
                 break;
             }
         }
-        for (int i=index;i<lastIndex;i++)
-            array[i] = array[i+1];
-        array[lastIndex] = null;
-        lastIndex--;
-        if (array.length > INIT_SIZE && lastIndex < array.length / CUT_RATE)
-            resize(array.length/2);
+        if (index != lastIndex) {
+            for (int i = index; i < lastIndex; i++)
+                array[i] = array[i + 1];
+            array[lastIndex] = null;
+            lastIndex--;
+            resize(array.length - 1);
+        }
     }
 
     /**
